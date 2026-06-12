@@ -1,0 +1,69 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  SERVICE_NAME: "meeting-system-web"
+  IMAGE_TAG: "$CI_COMMIT_SHORT_SHA" 
+  TAR_IMAGES_FILE: "${SERVICE_NAME}-${CI_COMMIT_SHORT_SHA}.tar"
+
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  before_script:
+    - docker info
+  script:
+    - mkdir -p docker_cache
+    - 'echo "Building image: ${SERVICE_NAME}:${IMAGE_TAG}"'
+    - docker build -t ${SERVICE_NAME}:${IMAGE_TAG} .
+    - docker save -o docker_cache/${TAR_IMAGES_FILE} ${SERVICE_NAME}:${IMAGE_TAG}
+    - ls -lh docker_cache/
+  artifacts:
+    paths:
+      - docker_cache/
+    expire_in: 1 hour
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  image: alpine:latest 
+  variables:
+    SERVER_USER: "root"
+    SERVER_IP: "192.168.71.18"
+    SERVER_PORT: "3036:80"
+    SSH_KEY: "$SSH_PRIVATE_KEY"
+  extends: .deploy_template
+
+.deploy_template:
+  before_script:
+    - echo "Setting up SSH..."
+    - apk add --update --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - 'echo "=== DEPLOYING VERSION: ${IMAGE_TAG} ==="'
+    
+    - ls -lh docker_cache/
+
+    - scp docker_cache/${TAR_IMAGES_FILE} $SERVER_USER@$SERVER_IP:~/${TAR_IMAGES_FILE}
+
+    - ssh $SERVER_USER@$SERVER_IP "docker load -i ${TAR_IMAGES_FILE} && rm -f ${TAR_IMAGES_FILE}"
+
+    - ssh $SERVER_USER@$SERVER_IP "docker rm -f ${SERVICE_NAME} || true"
+
+    - ssh $SERVER_USER@$SERVER_IP "docker run -d --name ${SERVICE_NAME} -p $SERVER_PORT -e VIRTUAL_HOST=${SUBDOMAIN} --restart unless-stopped ${SERVICE_NAME}:${IMAGE_TAG}"
+
+    - ssh $SERVER_USER@$SERVER_IP "docker images --format '{{.Repository}}:{{.Tag}}' | grep '${SERVICE_NAME}' | grep -v '${IMAGE_TAG}' | xargs -r docker rmi || true"
+    
+    - ssh $SERVER_USER@$SERVER_IP "docker image prune -f"
+
+  retry: 2
+  only:
+    - main

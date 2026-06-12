@@ -1,0 +1,39 @@
+{
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+
+  "tailwindCSS.includeLanguages": {
+    "vue": "html",
+    "vue-html": "html",
+    "plaintext": "html"
+  },
+
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.validate": true,
+  // Force the extension to use this CSS file as the Tailwind v4 entrypoint
+  "tailwindCSS.experimental.configFile": "src/styles/tailwind.css",
+
+  // Ensure .css files open in Tailwind CSS mode so the extension recognizes @import
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  // Ensure suggestions are enabled
+  "tailwindCSS.suggestions": true,
+
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "css.lint.unknownAtRules": "ignore"
+}
