@@ -150,7 +150,7 @@ onMounted(() => {
         <div class="flex items-end gap-1 min-w-0">
             <h2
                 ref="textEl"
-                class="text-lg sm:text-[22px] font-extrabold text-[#001f3f] uppercase tracking-wider leading-tight transition-all duration-300"
+                class="text-lg sm:text-[22px] font-bold text-[#001f3f] uppercase tracking-wider leading-tight transition-all duration-300"
                 :class="expandedRooms[room?.id] ? 'whitespace-normal' : 'truncate'"
             >
             {{ room?.room_name }}

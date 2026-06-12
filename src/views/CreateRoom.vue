@@ -2,7 +2,7 @@
   <div class="room-container">
     <div class="header ml-8">
       <div class="p-0 m-0">
-        <h2 class="title text-[25px]">Meeting Rooms List</h2>
+        <h2 class="title text-[25px] font-bold">Meeting Rooms List</h2>
         <span class="text-sm text-gray-400"
           >Manage and view all available meeting spaces across facilities.</span
         >
@@ -285,7 +285,7 @@ onMounted(async () => {
 
 .title {
   margin: 0;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 .room-item {
