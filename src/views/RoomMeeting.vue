@@ -11,7 +11,9 @@ import LaptopComputerIcon from '@iconify-vue/emojione-v1/laptop-computer';
 import VideoProjectorIcon from '@iconify-vue/flat-color-icons/video-projector';
 import ModernTvCurvyEdgeIcon from '@iconify-vue/streamline-ultimate-color/modern-tv-curvy-edge';
 import MicrosoftTeamsIcon from '@iconify-vue/logos/microsoft-teams';
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const equipmentConfig = {
     PC: { label: 'Laptop', icon: LaptopComputerIcon, classes: 'bg-[#DFE4F3] border-[#3454A6] text-[#3454A6]' },
     Projector: { label: 'Projector', icon: VideoProjectorIcon, classes: 'bg-[#DFEBEF] border-[#246A61] text-[#246A61]' },
@@ -64,6 +66,10 @@ const bookingForm = ref({
 });
 
 // ========== SAFARI-SAFE DATE PARSING ==========
+
+const goToCreateRoom = () => {
+  router.push("/create-room")
+}
 
 const safeParseDateString = (dateString) => {
   if (!dateString) return null;
@@ -574,11 +580,17 @@ watch(selectedRoom, () => {
 });
 
 onMounted(async () => {
+  const id = window.history.state?.hiddenRoomId;
+  
   try {
     loadUserData();
     await fetchRooms();
-    if (rooms.value.length > 0) {
+    if (id) {
+      selectedRoom.value = id || "";
+    } else if (rooms.value.length > 0) {
       selectedRoom.value = rooms.value[0].id || "";
+    } else {
+      ElMessage.error("No room has been selected!");
     }
   } catch (err) {
     console.error("Failed to load rooms:", err);
@@ -696,6 +708,10 @@ const getDetailEquipments = (booking) => {
 <template>
   <div class="meeting-container">
     <div class="header-section">
+      <div @click="goToCreateRoom" class="cursor-pointer p-3 hover:bg-gray-100 rounded-md">
+        <img src="@/assets/icons/return.svg" alt="Back" class="w-6 h-6" />
+      </div>
+      
       <div class="room-selection">
         <el-select
           v-model="selectedRoom"
@@ -708,7 +724,7 @@ const getDetailEquipments = (booking) => {
           <el-option
             v-for="room in rooms"
             :key="room.id"
-            :label="room.room_name || room.name"
+            :label="room.room_name.toUpperCase() || room.name.toUpperCase()"
             :value="room.id"
           />
         </el-select>

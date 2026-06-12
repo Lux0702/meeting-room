@@ -44,6 +44,8 @@
                 :key="room.id"
                 :room="room"
                 @load-room="LoadRoom"
+                @click="goToRoomSchedule(room?.id)"
+                class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-95"
               />
             </div>
           </el-tab-pane>
@@ -139,6 +141,9 @@ import { get, post, put, remove } from "@/api/api";
 import RoomCardWeb from "@/components/web/RoomCardWeb.vue";
 import { Success } from "@/utils/Notification";
 import { onMounted, reactive, ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const activeFloor = ref("1");
 const showPreview = ref(false);
@@ -255,6 +260,13 @@ const handleChangeFactory = async () => {
   const res = await get(`dep-name/${GSBH.value}`, { gsbh: GSBH.value });
   fillopiton.depname = res;
 };
+
+const goToRoomSchedule = (roomId) => {
+  router.push({
+    path: '/',
+    state: { hiddenRoomId: roomId }
+  });
+}
 
 onMounted(async () => {
   await LoadRoom();
