@@ -19,7 +19,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['loadRoom'])
+const emit = defineEmits(['loadRoom', 'update-room'])
 
 const referenceImages = ref([]);
 const equipmentConfig = {
@@ -57,6 +57,30 @@ const images = import.meta.glob(
     import: "default",
   }
 );
+
+const carouselRef = ref(null);
+let startX = 0;
+
+// Bắt tọa độ X khi ngón tay bắt đầu chạm vào màn hình
+const handleTouchStart = (e) => {
+  startX = e.changedTouches[0].screenX;
+};
+
+// Bắt tọa độ X khi ngón tay nhấc lên và tính toán hướng vuốt
+const handleTouchEnd = (e) => {
+  const endX = e.changedTouches[0].screenX;
+  const distance = endX - startX;
+
+  // Vuốt sang trái (Khoảng cách âm -> Chuyển slide tiếp theo)
+  if (distance < -50) {
+    carouselRef.value.next();
+  }
+  
+  // Vuốt sang phải (Khoảng cách dương -> Chuyển slide trước đó)
+  if (distance > 50) {
+    carouselRef.value.prev();
+  }
+};
 
 watch(
   () => props.room?.id_gsbh,
@@ -102,7 +126,10 @@ const getActiveEquipments = (room) => {
 
 const handleRoomAction = (command) => {
     if (command === "edit") {
-        console.log("Edit room:", props.room);
+        const equips = Object.keys(equipmentConfig)
+                            .filter(key => props.room[key] === true)
+                            .map(key => equipmentConfig[key].label)
+        emit('update-room', {...props.room, equipments: equips })
     } else if (command === "delete") {
        ElMessageBox.confirm(
         "Are you sure you want to delete this room?",
@@ -133,8 +160,8 @@ onMounted(() => {
     class="w-full max-h-100 rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm font-sans"
   >
     <!-- Room Images -->
-    <div class="relative">
-      <el-carousel trigger="click" height="220px" :autoplay="false">
+    <div class="relative" @click.stop>
+      <el-carousel ref="carouselRef" trigger="click" height="220px" :autoplay="false" @touchstart="handleTouchStart" @touchend="handleTouchEnd">
         <el-carousel-item v-for="item in referenceImages" :key="item">
           <img
             :src="item"
@@ -165,7 +192,7 @@ onMounted(() => {
         </div>
 
         <el-dropdown v-if="role === 'ADMIN'" trigger="click" @command="handleRoomAction">
-            <div class="cursor-pointer p-1.5 rounded-full hover:bg-gray-100 text-[18px]">
+            <div @click.stop class="cursor-pointer p-1.5 rounded-full hover:bg-gray-100 text-[18px]">
                 <el-icon><Setting /></el-icon>
             </div>
             <template #dropdown>
