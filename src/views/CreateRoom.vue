@@ -1,6 +1,6 @@
 <template>
-  <div ref="roomContainer" class="room-container">
-    <div ref="roomHeader" class="header ml-8">
+  <el-scrollbar class="room-container">
+    <div class="header ml-8">
       <div class="p-0 m-0">
         <h2 class="title text-[25px] font-bold">Meeting Rooms List</h2>
         <span class="text-sm text-gray-400"
@@ -27,34 +27,32 @@
       </div>
     </el-card>
 
-    <el-scrollbar :height="heightScroll" v-else>
-        <div class="relative">
-          <el-tabs v-model="activeFloor">
-            <el-tab-pane
-              v-for="floor in floorTabs"
-              :key="floor"
-              :label="`${floor} Floor`"
-              :name="floor"
-            >
-              <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-6"
-              >
-                <RoomCardWeb
-                  v-for="room in roomsByFloor[floor]"
-                  :key="room.id"
-                  :room="room"
-                  @load-room="LoadRoom"
-                  @click="goToRoomSchedule(room?.id)"
-                  class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-95"
-                />
-              </div>
-            </el-tab-pane>
-          </el-tabs>
-          <el-button class="absolute top-1 right-0" @click="showPreview = true"
-            >Map {{ activeFloor }}</el-button
+    <div class="relative" v-else>
+      <el-tabs v-model="activeFloor">
+        <el-tab-pane
+          v-for="floor in floorTabs"
+          :key="floor"
+          :label="`${floor} Floor`"
+          :name="floor"
+        >
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-6"
           >
-        </div>
-    </el-scrollbar>
+            <RoomCardWeb
+              v-for="room in roomsByFloor[floor]"
+              :key="room.id"
+              :room="room"
+              @load-room="LoadRoom"
+              @click="goToRoomSchedule(room?.id)"
+              class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-95"
+            />
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+      <el-button class="absolute top-1 right-0" @click="showPreview = true"
+        >Map {{ activeFloor }}</el-button
+      >
+    </div>
 
     <el-dialog
       v-model="dialogVisible"
@@ -133,7 +131,7 @@
       :url-list="[url]"
       @close="showPreview = false"
     />
-  </div>
+  </el-scrollbar>
 </template>
 
 <script setup>
@@ -145,9 +143,6 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const roomContainer = ref(null);
-const roomHeader = ref(null);
-const heightScroll = ref('100%');
 const activeFloor = ref("1");
 const showPreview = ref(false);
 const floors = {
@@ -273,12 +268,6 @@ const goToRoomSchedule = (roomId) => {
 
 onMounted(async () => {
   await LoadRoom();
-
-  if (roomContainer.value) {
-    const height = roomContainer.value.clientHeight - roomHeader.value.clientHeight - 130;
-    console.log("🚀 ~ height:", height)
-    heightScroll.value = `${height}px`
-  }
   // const res = await get("gsbh");
   // fillopiton.gsbh = res.map((item) => ({
   //   value: String(item),
@@ -291,7 +280,7 @@ onMounted(async () => {
 .room-container {
   background: #f5f7fa;
   padding: 16px;
-  min-height: calc(100vh - 60px);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   overflow: hidden;

@@ -68,7 +68,7 @@ const bookingForm = ref({
 // ========== SAFARI-SAFE DATE PARSING ==========
 
 const goToCreateRoom = () => {
-  router.push("/create-room")
+  router.push("/")
 }
 
 const safeParseDateString = (dateString) => {
