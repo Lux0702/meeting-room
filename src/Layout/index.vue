@@ -185,7 +185,7 @@ onUnmounted(() => {
 }
 
 .layout-content {
-  height: 100vh;
+  height: 100%;
   background: #f5f7fa;
   padding: 20px;
   overflow: auto;

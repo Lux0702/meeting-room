@@ -7,24 +7,40 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRoomMeeting } from "@/hooks/useRoomMeeting";
-import LaptopComputerIcon from '@iconify-vue/emojione-v1/laptop-computer';
-import VideoProjectorIcon from '@iconify-vue/flat-color-icons/video-projector';
-import ModernTvCurvyEdgeIcon from '@iconify-vue/streamline-ultimate-color/modern-tv-curvy-edge';
-import MicrosoftTeamsIcon from '@iconify-vue/logos/microsoft-teams';
+import LaptopComputerIcon from "@iconify-vue/emojione-v1/laptop-computer";
+import VideoProjectorIcon from "@iconify-vue/flat-color-icons/video-projector";
+import ModernTvCurvyEdgeIcon from "@iconify-vue/streamline-ultimate-color/modern-tv-curvy-edge";
+import MicrosoftTeamsIcon from "@iconify-vue/logos/microsoft-teams";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 const equipmentConfig = {
-    PC: { label: 'Laptop', icon: LaptopComputerIcon, classes: 'bg-[#DFE4F3] border-[#3454A6] text-[#3454A6]' },
-    Projector: { label: 'Projector', icon: VideoProjectorIcon, classes: 'bg-[#DFEBEF] border-[#246A61] text-[#246A61]' },
-    TV: { label: 'TV', icon: ModernTvCurvyEdgeIcon, classes: 'bg-[#EDE5E5] border-[#8E4416] text-[#8E4416]' },
-    Zoom: { label: 'Teams', icon: MicrosoftTeamsIcon, classes: 'bg-[#f3e8ff] border-[#7e22ce] text-[#7e22ce]'}
-}
+  PC: {
+    label: "Laptop",
+    icon: LaptopComputerIcon,
+    classes: "bg-[#DFE4F3] border-[#3454A6] text-[#3454A6]",
+  },
+  Projector: {
+    label: "Projector",
+    icon: VideoProjectorIcon,
+    classes: "bg-[#DFEBEF] border-[#246A61] text-[#246A61]",
+  },
+  TV: {
+    label: "TV",
+    icon: ModernTvCurvyEdgeIcon,
+    classes: "bg-[#EDE5E5] border-[#8E4416] text-[#8E4416]",
+  },
+  Zoom: {
+    label: "Teams",
+    icon: MicrosoftTeamsIcon,
+    classes: "bg-[#f3e8ff] border-[#7e22ce] text-[#7e22ce]",
+  },
+};
 
 const statusOptions = [
-  { label: 'Confirmed'.toUpperCase(), value: 'confirmed'.toUpperCase() },
-  { label: 'Pending'.toUpperCase(), value: 'pending'.toUpperCase() },
-  { label: 'Cancelled'.toUpperCase(), value: 'cancelled'.toUpperCase() },
+  { label: "Confirmed".toUpperCase(), value: "confirmed".toUpperCase() },
+  { label: "Pending".toUpperCase(), value: "pending".toUpperCase() },
+  { label: "Cancelled".toUpperCase(), value: "cancelled".toUpperCase() },
 ];
 
 const {
@@ -37,7 +53,7 @@ const {
   cancelBooking,
 } = useRoomMeeting();
 
-const selectRef = ref(null)
+const selectRef = ref(null);
 const selectedRoom = ref(null);
 const roomBookings = ref([]);
 const showBookingDialog = ref(false);
@@ -68,8 +84,8 @@ const bookingForm = ref({
 // ========== SAFARI-SAFE DATE PARSING ==========
 
 const goToCreateRoom = () => {
-  router.push("/")
-}
+  router.push("/");
+};
 
 const safeParseDateString = (dateString) => {
   if (!dateString) return null;
@@ -148,22 +164,22 @@ const extractDateTime = (date) => {
 const availableEquipments = computed(() => {
   const room = rooms.value.find((r) => r.id === selectedRoom.value);
   if (!room) return [];
-  
+
   const equips = [];
-  if (room.PC) equips.push({ label: 'Laptop', value: 'PC' });
-  if (room.Projector) equips.push({ label: 'Projector', value: 'Projector' });
-  if (room.TV) equips.push({ label: 'TV', value: 'TV' });
-  if (room.Zoom) equips.push({ label: 'Teams', value: 'Zoom' });
+  if (room.PC) equips.push({ label: "Laptop", value: "PC" });
+  if (room.Projector) equips.push({ label: "Projector", value: "Projector" });
+  if (room.TV) equips.push({ label: "TV", value: "TV" });
+  if (room.Zoom) equips.push({ label: "Teams", value: "Zoom" });
   return equips;
 });
 
 // Toggle chọn/bỏ chọn Equipment
 const toggleEquipment = (equip) => {
-  // Nếu tag là Zoom và đang tick "IT Create Link" thì không cho phép click hủy 
+  // Nếu tag là Zoom và đang tick "IT Create Link" thì không cho phép click hủy
   if (equip.value === "Zoom" && bookingForm.value.itCreateLink) {
     return;
   }
-  
+
   const index = bookingForm.value.equipments.indexOf(equip.value);
   if (index > -1) {
     bookingForm.value.equipments.splice(index, 1);
@@ -175,7 +191,7 @@ const toggleEquipment = (equip) => {
 const handleItCreateChange = (val) => {
   if (val) {
     bookingForm.value.status = "pending";
-    
+
     if (!bookingForm.value.equipments.includes("Zoom")) {
       bookingForm.value.equipments.push("Zoom");
     }
@@ -191,7 +207,11 @@ const handleItCreateChange = (val) => {
 // Hiển thị khung Meeting Detail tuỳ điều kiện
 const showMeetingDetails = computed(() => {
   // Nếu tự tạo Zoom => Hiển thị để điền
-  if (bookingForm.value.equipments.includes("Zoom") && !bookingForm.value.itCreateLink) return true;
+  if (
+    bookingForm.value.equipments.includes("Zoom") &&
+    !bookingForm.value.itCreateLink
+  )
+    return true;
   // Nếu đang Edit và là lịch có yêu cầu IT tạo link => Hiển thị cho IT điền
   if (isEditMode.value && bookingForm.value.itCreateLink) return true;
   return false;
@@ -199,10 +219,10 @@ const showMeetingDetails = computed(() => {
 
 // ========== BOOKING OPERATIONS ==========
 const statusColorMap = {
-  confirmed: "#67C23A", 
-  pending: "#909399", 
-  cancelled: "#F56C6C", 
-  conflicted: "#E6A23C", 
+  confirmed: "#67C23A",
+  pending: "#909399",
+  cancelled: "#F56C6C",
+  conflicted: "#E6A23C",
 };
 
 const fetchRoomBookings = async (targetDate = null) => {
@@ -232,7 +252,8 @@ const fetchRoomBookings = async (targetDate = null) => {
         const end = safeParseDateString(booking.end_day);
 
         if (!start || !end) return null;
-        const eventColor = statusColorMap[booking.status?.toLowerCase()] || "#409EFF";
+        const eventColor =
+          statusColorMap[booking.status?.toLowerCase()] || "#409EFF";
 
         return {
           id: booking.id,
@@ -250,7 +271,7 @@ const fetchRoomBookings = async (targetDate = null) => {
           },
         };
       })
-      .filter((event) => event !== null); 
+      .filter((event) => event !== null);
 
     calendarOptions.value.events = events;
     roomBookings.value = allBookings;
@@ -270,7 +291,7 @@ const handleDateClick = (arg) => {
   currentEditingId.value = null;
 
   const { dateStr, timeStr } = extractDateTime(arg.date);
-  
+
   // Reset Form
   bookingForm.value = {
     title: "New meeting",
@@ -328,10 +349,18 @@ const submitBooking = async () => {
   try {
     if (!validateBookingForm()) return;
 
-    const startDate = new Date(`${bookingForm.value.date}T${bookingForm.value.startTime}`);
-    const endDate = new Date(`${bookingForm.value.date}T${bookingForm.value.endTime}`);
+    const startDate = new Date(
+      `${bookingForm.value.date}T${bookingForm.value.startTime}`,
+    );
+    const endDate = new Date(
+      `${bookingForm.value.date}T${bookingForm.value.endTime}`,
+    );
 
-    const isConflict = isTimeOverlapping(startDate, endDate, roomBookings.value);
+    const isConflict = isTimeOverlapping(
+      startDate,
+      endDate,
+      roomBookings.value,
+    );
 
     const startFormatted = formatForAPI(startDate);
     const endFormatted = formatForAPI(endDate);
@@ -356,7 +385,7 @@ const submitBooking = async () => {
       user_create: bookingForm.value.booker,
       descriptions: bookingForm.value.description,
       members: bookingForm.value.members.join(", "),
-      
+
       // Data bổ sung
       ...Object.keys(equipmentConfig).reduce((acc, key) => {
         acc[key] = bookingForm.value.equipments.includes(key);
@@ -388,7 +417,7 @@ const editBooking = (booking) => {
   // if (!isUserOwner(booking.user_create)) {
   //   ElMessage.error("You can only edit your own bookings");
   //   return;
-  // } 
+  // }
 
   isEditMode.value = true;
   currentEditingId.value = booking.id;
@@ -401,11 +430,14 @@ const editBooking = (booking) => {
     return;
   }
 
-  const { dateStr: startDateStr, timeStr: startTimeStr } = extractDateTime(startDate);
+  const { dateStr: startDateStr, timeStr: startTimeStr } =
+    extractDateTime(startDate);
   const { timeStr: endTimeStr } = extractDateTime(endDate);
 
   // 1. Quét qua dữ liệu API trả về, nếu thiết bị nào có giá trị 'true' thì nhét tên nó vào mảng
-  const activeEquipments = Object.keys(equipmentConfig).filter((key) => booking[key] === true);
+  const activeEquipments = Object.keys(equipmentConfig).filter(
+    (key) => booking[key] === true,
+  );
 
   // 2. Xử lý lấy thông tin link (Hỗ trợ cả việc bạn tách object meeting_link riêng hoặc gộp chung)
   const linkData = booking.meeting_link || booking;
@@ -417,11 +449,13 @@ const editBooking = (booking) => {
     endTime: endTimeStr,
     booker: booking.user_create,
     description: booking.descriptions || "",
-    members: booking.members ? booking.members.split(",").map((m) => m.trim()) : [],
-    
+    members: booking.members
+      ? booking.members.split(",").map((m) => m.trim())
+      : [],
+
     // Đưa mảng vừa lọc được vào UI để hiển thị sáng/tối cho các nút Tag
     equipments: activeEquipments,
-    
+
     itCreateLink: booking.IT_create_link || false,
     meetingUrl: linkData.meeting_url || "",
     meetingId: linkData.meeting_id || "",
@@ -471,22 +505,27 @@ const handleEventClick = (info) => {
   const room = rooms.value.find((r) => r.id === selectedRoom.value);
   const isOwner = isUserOwner(event.extendedProps.booker);
 
-  const rawBooking = roomBookings.value.find(b => b.id === event.id) || {};
-  
+  const rawBooking = roomBookings.value.find((b) => b.id === event.id) || {};
+
   selectedBooking.value = {
     event,
     room,
     isOwner,
-    ...rawBooking
+    ...rawBooking,
   };
-  console.log("🚀 ~ handleEventClick ~ selectedBooking.value:", selectedBooking.value)
+  console.log(
+    "🚀 ~ handleEventClick ~ selectedBooking.value:",
+    selectedBooking.value,
+  );
 
   showDetailDialog.value = true;
 };
 
 const handleEditClick = () => {
   showDetailDialog.value = false;
-  editBooking(roomBookings.value.find((b) => b.id === selectedBooking.value.event.id));
+  editBooking(
+    roomBookings.value.find((b) => b.id === selectedBooking.value.event.id),
+  );
 };
 
 const handleCancelClick = () => {
@@ -508,9 +547,7 @@ const updateCalendarView = () => {
   const api = calendarRef.value?.getApi();
   if (!api) return;
 
-  const view = window.innerWidth <= 768
-    ? "timeGridFourDay"
-    : "timeGridWeek";
+  const view = window.innerWidth <= 768 ? "timeGridFourDay" : "timeGridWeek";
 
   if (api.view.type !== view) {
     api.changeView(view);
@@ -529,11 +566,14 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateCalendarView);
 });
 const calendarOptions = ref({
+ 
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
   initialView: "timeGridWeek",
   locale: "en",
   firstDay: 1,
   scrollTime: "07:00:00",
+  slotMinTime: "07:00:00",
+  slotMaxTime: "20:30:00",
   slotEventOverlap: false,
   height: 'auto', // Ép FullCalendar lấy 100% chiều cao của .calendar-container
   expandRows: true, // Ép các dòng (rows) tự động giãn đều hoặc co lại
@@ -575,9 +615,9 @@ const calendarOptions = ref({
     timeGridWeek: { eventMaxStack: 2 },
     timeGridDay: { dayMaxEvents: 10 },
     timeGridFourDay: {
-      type: 'timeGrid',
-      duration: { days: 2 }
-    }
+      type: "timeGrid",
+      duration: { days: 2 },
+    },
   },
   eventTimeFormat: {
     hour: "2-digit",
@@ -600,8 +640,6 @@ const calendarOptions = ref({
     };
   },
   aspectRatio: 1.5,
-  slotMinTime: "06:00:00",
-  slotMaxTime: "24:00:00",
 });
 
 // ========== WATCHERS & LIFECYCLE ==========
@@ -612,7 +650,7 @@ watch(selectedRoom, () => {
 
 onMounted(async () => {
   const id = window.history.state?.hiddenRoomId;
-  
+
   try {
     loadUserData();
     await fetchRooms();
@@ -648,14 +686,18 @@ onUnmounted(() => {
 
 const getStatusTagType = (status) => {
   switch (status?.toLowerCase()) {
-    case 'confirmed': return 'success';
-    case 'pending': return 'warning';
-    case 'cancelled': return 'danger';
-    case 'conflicted': return 'danger';
-    default: return 'info';
+    case "confirmed":
+      return "success";
+    case "pending":
+      return "warning";
+    case "cancelled":
+      return "danger";
+    case "conflicted":
+      return "danger";
+    default:
+      return "info";
   }
 };
-
 
 const formatTimeOnly = (dateString) => {
   const date =
@@ -724,9 +766,9 @@ const isTimeOverlapping = (newStart, newEnd, existingBookings) => {
 const handleTagCreation = () => {
   // Directly resets the typed search input field after a tag is confirmed
   if (selectRef.value) {
-    selectRef.value.states.inputValue = ''
+    selectRef.value.states.inputValue = "";
   }
-}
+};
 
 // --- HÀM LẤY DANH SÁCH THIẾT BỊ TỪ DỮ LIỆU BOOLEAN ---
 const getDetailEquipments = (booking) => {
@@ -739,10 +781,13 @@ const getDetailEquipments = (booking) => {
 <template>
   <div class="meeting-container">
     <div class="header-section">
-      <div @click="goToCreateRoom" class="cursor-pointer p-3 hover:bg-gray-100 rounded-md">
+      <div
+        @click="goToCreateRoom"
+        class="cursor-pointer p-3 hover:bg-gray-100 rounded-md"
+      >
         <img src="@/assets/icons/return.svg" alt="Back" class="w-6 h-6" />
       </div>
-      
+
       <div class="room-selection">
         <el-select
           v-model="selectedRoom"
@@ -775,7 +820,6 @@ const getDetailEquipments = (booking) => {
       align-center
     >
       <el-form :model="bookingForm" label-position="top" class="p-3">
-
         <el-form-item label="Title" required>
           <el-input
             v-model="bookingForm.title"
@@ -822,7 +866,10 @@ const getDetailEquipments = (booking) => {
         <el-form-item>
           <el-checkbox
             v-model="bookingForm.itCreateLink"
-            :disabled="bookingForm.equipments.includes('Zoom') && !bookingForm.itCreateLink"
+            :disabled="
+              bookingForm.equipments.includes('Zoom') &&
+              !bookingForm.itCreateLink
+            "
             @change="handleItCreateChange"
             border
             class="w-full flex"
@@ -831,7 +878,10 @@ const getDetailEquipments = (booking) => {
           </el-checkbox>
         </el-form-item>
 
-        <el-form-item label="Room Equipment" v-if="availableEquipments.length > 0">
+        <el-form-item
+          label="Room Equipment"
+          v-if="availableEquipments.length > 0"
+        >
           <div class="flex flex-wrap gap-2">
             <div
               v-for="equip in availableEquipments"
@@ -839,16 +889,16 @@ const getDetailEquipments = (booking) => {
               @click="toggleEquipment(equip)"
               :class="[
                 'cursor-pointer select-none transition-all duration-200 flex items-center gap-1.5 px-2  border rounded-md text-[12px] font-bold whitespace-nowrap uppercase',
-                
+
                 // Xử lý hiệu ứng vô hiệu hóa (disabled) cho tag Zoom khi đã chọn IT Create Link
-                (equip.value === 'Zoom' && bookingForm.itCreateLink) 
+                equip.value === 'Zoom' && bookingForm.itCreateLink
                   ? 'opacity-60 cursor-not-allowed pointer-events-none' // Mờ đi và chặn hiệu ứng hover chuột
                   : 'cursor-pointer',
-                
+
                 // Xử lý màu nút theo trạng thái của equipments
                 bookingForm.equipments.includes(equip.value)
                   ? equipmentConfig[equip.value]?.classes
-                  : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300 hover:bg-gray-50'
+                  : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300 hover:bg-gray-50',
               ]"
             >
               <el-icon size="18px" class="shrink-0">
@@ -862,9 +912,12 @@ const getDetailEquipments = (booking) => {
         <template v-if="showMeetingDetails">
           <div class="p-4 bg-[#f8f9fa] border border-[#ebeef5] rounded-lg mb-4">
             <el-form-item label="Meeting URL" class="mb-3">
-              <el-input v-model="bookingForm.meetingUrl" placeholder="https://zoom.us/..." />
+              <el-input
+                v-model="bookingForm.meetingUrl"
+                placeholder="https://zoom.us/..."
+              />
             </el-form-item>
-            
+
             <div class="flex gap-4 mb-3">
               <el-form-item label="Meeting ID" class="flex-1 mb-0">
                 <el-input v-model="bookingForm.meetingId" />
@@ -886,12 +939,24 @@ const getDetailEquipments = (booking) => {
             default-first-option
             placeholder="Type and press Enter"
             :suffix-icon="null"
-            :popper-options="{ modifiers: [{ name: 'eventListeners', options: { scroll: false, resize: false } }] }"
+            :popper-options="{
+              modifiers: [
+                {
+                  name: 'eventListeners',
+                  options: { scroll: false, resize: false },
+                },
+              ],
+            }"
             popper-class="hidden-dropdown"
             @change="handleTagCreation"
           >
             <!-- Keep options empty or bind to an array if you want autocomplete suggestions -->
-            <el-option v-for="member in []" :key="member" :label="member" :value="member" />
+            <el-option
+              v-for="member in []"
+              :key="member"
+              :label="member"
+              :value="member"
+            />
           </el-select>
         </el-form-item>
 
@@ -956,16 +1021,24 @@ const getDetailEquipments = (booking) => {
             </div>
           </div>
         </div>
-        
+
         <el-descriptions :column="1" border class="booking-info">
-          
           <el-descriptions-item label="Status">
-            <el-tag 
-              :type="getStatusTagType(selectedBooking?.status || selectedBooking.event.extendedProps.status)" 
-              class="uppercase font-bold" 
+            <el-tag
+              :type="
+                getStatusTagType(
+                  selectedBooking?.status ||
+                    selectedBooking.event.extendedProps.status,
+                )
+              "
+              class="uppercase font-bold"
               size="small"
             >
-              {{ selectedBooking?.status || selectedBooking.event.extendedProps.status || 'UNKNOWN' }}
+              {{
+                selectedBooking?.status ||
+                selectedBooking.event.extendedProps.status ||
+                "UNKNOWN"
+              }}
             </el-tag>
           </el-descriptions-item>
 
@@ -979,11 +1052,11 @@ const getDetailEquipments = (booking) => {
               (Floor {{ selectedBooking.room.floor }})
             </span>
           </el-descriptions-item>
-          
+
           <el-descriptions-item label="Date">
             {{ formatFullDate(selectedBooking.event.start) }}
           </el-descriptions-item>
-          
+
           <el-descriptions-item label="Time">
             {{ formatTime(selectedBooking.event.start) }} -
             {{ formatTime(selectedBooking.event.end) }}
@@ -995,38 +1068,62 @@ const getDetailEquipments = (booking) => {
             }})
           </el-descriptions-item>
 
-          <el-descriptions-item label="Equipments" v-if="getDetailEquipments(selectedBooking).length > 0">
+          <el-descriptions-item
+            label="Equipments"
+            v-if="getDetailEquipments(selectedBooking).length > 0"
+          >
             <div class="flex flex-wrap gap-2">
-              <div 
-                v-for="(equip, index) in getDetailEquipments(selectedBooking)" 
+              <div
+                v-for="(equip, index) in getDetailEquipments(selectedBooking)"
                 :key="index"
                 :class="[
                   'flex items-center gap-1.5 px-2.5 py-1 border rounded-md text-xs font-bold whitespace-nowrap uppercase',
-                  equipmentConfig[equip]?.classes || 'bg-gray-100 border-gray-200 text-gray-700'
+                  equipmentConfig[equip]?.classes ||
+                    'bg-gray-100 border-gray-200 text-gray-700',
                 ]"
               >
-                <el-icon size="16px" class="shrink-0" v-if="equipmentConfig[equip]?.icon">
+                <el-icon
+                  size="16px"
+                  class="shrink-0"
+                  v-if="equipmentConfig[equip]?.icon"
+                >
                   <component :is="equipmentConfig[equip].icon" />
                 </el-icon>
-                
-                <span class="tracking-wide">{{ equipmentConfig[equip]?.label || equip }}</span>
+
+                <span class="tracking-wide">{{
+                  equipmentConfig[equip]?.label || equip
+                }}</span>
               </div>
             </div>
           </el-descriptions-item>
 
           <template v-if="selectedBooking?.Zoom === true">
             <el-descriptions-item label="Meeting URL">
-              <a :href="selectedBooking?.meeting_link?.meeting_url" target="_blank" class="text-blue-600 hover:underline break-all font-medium">
+              <a
+                :href="selectedBooking?.meeting_link?.meeting_url"
+                target="_blank"
+                class="text-blue-600 hover:underline break-all font-medium"
+              >
                 {{ selectedBooking?.meeting_link?.meeting_url }}
               </a>
             </el-descriptions-item>
-            
-            <el-descriptions-item label="Meeting ID" v-if="selectedBooking?.meeting_link?.meeting_id">
-              <span class="font-medium">{{ selectedBooking?.meeting_link?.meeting_id }}</span>
+
+            <el-descriptions-item
+              label="Meeting ID"
+              v-if="selectedBooking?.meeting_link?.meeting_id"
+            >
+              <span class="font-medium">{{
+                selectedBooking?.meeting_link?.meeting_id
+              }}</span>
             </el-descriptions-item>
-            
-            <el-descriptions-item label="Passcode" v-if="selectedBooking?.meeting_link?.passcode">
-              <span class="font-medium">{{ selectedBooking?.meeting_link?.passcode }}</span>
+
+            <el-descriptions-item
+              label="Passcode"
+              v-if="selectedBooking?.meeting_link?.passcode"
+            >
+              <span class="font-medium">{{
+                selectedBooking?.meeting_link?.passcode
+              }}</span>
             </el-descriptions-item>
           </template>
 
@@ -1046,14 +1143,14 @@ const getDetailEquipments = (booking) => {
               </el-tag>
             </div>
           </el-descriptions-item>
-          
+
           <el-descriptions-item
             v-if="selectedBooking.event.extendedProps.members"
             label="Members"
           >
             {{ selectedBooking.event.extendedProps.members }}
           </el-descriptions-item>
-          
+
           <el-descriptions-item
             v-if="selectedBooking.event.extendedProps.description"
             label="Description"
@@ -1064,11 +1161,21 @@ const getDetailEquipments = (booking) => {
           </el-descriptions-item>
         </el-descriptions>
       </div>
-      
+
       <template #footer>
         <div class="dialog-footer">
-          <el-button v-if="currentUser.role === 'ADMIN'" type="primary" @click="handleEditClick">Edit</el-button>
-          <el-button v-if="selectedBooking?.isOwner || currentUser.role === 'ADMIN'" type="danger" @click="handleCancelClick">Cancel Meeting</el-button>
+          <el-button
+            v-if="currentUser.role === 'ADMIN'"
+            type="primary"
+            @click="handleEditClick"
+            >Edit</el-button
+          >
+          <el-button
+            v-if="selectedBooking?.isOwner || currentUser.role === 'ADMIN'"
+            type="danger"
+            @click="handleCancelClick"
+            >Cancel Meeting</el-button
+          >
         </div>
       </template>
     </el-dialog>
@@ -1080,10 +1187,10 @@ const getDetailEquipments = (booking) => {
   overflow: visible !important;
 }
 :deep(.fc-timegrid-body) {
-  min-height: 600px; 
+  min-height: 700px;  
 }
 :deep(.fc-timegrid-event-harness) {
-  padding-right: 4px !important; 
+  padding-right: 4px !important;
   box-sizing: border-box;
 }
 :deep(.fc-v-event) {
@@ -1096,7 +1203,6 @@ const getDetailEquipments = (booking) => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  overflow: auto;
 }
 .header-section {
   display: flex;
@@ -1272,5 +1378,4 @@ const getDetailEquipments = (booking) => {
 .hidden-dropdown {
   display: none !important;
 }
-
 </style>
