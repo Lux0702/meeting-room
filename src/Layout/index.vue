@@ -148,6 +148,7 @@ onUnmounted(() => {
 <style scoped>
 .layout-container {
   height: 100%;
+  overflow: auto;
 }
 
 .layout-header {
@@ -184,6 +185,7 @@ onUnmounted(() => {
 }
 
 .layout-content {
+  height: 100vh;
   background: #f5f7fa;
   padding: 20px;
   overflow: auto;

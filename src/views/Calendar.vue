@@ -199,15 +199,21 @@ onUnmounted(() => {
 <style scoped>
 .calendar-container {
   padding: 10px;
-  height: 100%;
-  min-height: 80vh;
+  /* Thay vì 100% hay min-height, hãy dùng calc để khóa chặt chiều cao bằng màn hình */
+  height: calc(100vh - 60px); 
   background: white;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  overflow: auto;
+  box-sizing: border-box; /* Cực kỳ quan trọng để padding không cộng dồn vào height */
 }
 
+/* Đảm bảo FullCalendar nằm gọn và tự sinh thanh cuộn bên trong nó thay vì container ngoài */
 :deep(.fc) {
   height: 100%;
+}
+
+/* Bật thanh cuộn dọc cho nội dung của Calendar */
+:deep(.fc-scroller-liquid-absolute) {
+  overflow-y: auto !important;
 }
 
 :deep(.el-dialog) {

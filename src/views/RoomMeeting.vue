@@ -535,6 +535,8 @@ const calendarOptions = ref({
   firstDay: 1,
   scrollTime: "07:00:00",
   slotEventOverlap: false,
+  height: 'auto', // Ép FullCalendar lấy 100% chiều cao của .calendar-container
+  expandRows: true, // Ép các dòng (rows) tự động giãn đều hoặc co lại
   headerToolbar: {
     left: "myPrev,myNext",
     center: "title",
@@ -598,6 +600,8 @@ const calendarOptions = ref({
     };
   },
   aspectRatio: 1.5,
+  slotMinTime: "06:00:00",
+  slotMaxTime: "24:00:00",
 });
 
 // ========== WATCHERS & LIFECYCLE ==========
@@ -1131,14 +1135,21 @@ const getDetailEquipments = (booking) => {
   flex: 1;
 }
 .calendar-container {
-  flex: 1;
-  min-height: 600px;
+  padding: 10px;
+  /* min-height: 100%;  */
   background: white;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  box-sizing: border-box; /* Cực kỳ quan trọng để padding không cộng dồn vào height */
 }
+
+/* Đảm bảo FullCalendar nằm gọn và tự sinh thanh cuộn bên trong nó thay vì container ngoài */
 :deep(.fc) {
   height: 100%;
+}
+
+/* Bật thanh cuộn dọc cho nội dung của Calendar */
+:deep(.fc-scroller-liquid-absolute) {
+  overflow-y: auto !important;
 }
 :deep(.fc-event) {
   cursor: pointer;
