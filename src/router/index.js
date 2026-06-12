@@ -9,7 +9,7 @@ const router = createRouter({
       component: () => import("@/views/Login.vue"),
       beforeEnter: (to, from, next) => {
         if (isLogin()) {
-          next("/create-room");
+          next("/");
         } else {
           next();
         }
@@ -29,11 +29,11 @@ const router = createRouter({
         //   component: () => import("@/views/Calendar"),
         // },
         {
-          path: "/create-room",
+          path: "/",
           component: () => import("@/views/CreateRoom.vue"),
         },
         {
-          path: "/",
+          path: "/booking-meeting",
           component: () => import("@/views/RoomMeeting"),
         },
       ],
@@ -49,7 +49,7 @@ const router = createRouter({
     {
       path: "/test",
       component: () => import("@/components/web/RoomCardWeb.vue"),
-    }
+    },
   ],
 });
 

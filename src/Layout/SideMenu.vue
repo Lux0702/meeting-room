@@ -1,16 +1,22 @@
 <template>
-  <el-menu :collapse="collapse" router :default-active="activeMenu" class="el-menu-vertical" @select="handleSelect">
+  <el-menu
+    :collapse="collapse"
+    router
+    :default-active="activeMenu"
+    class="el-menu-vertical"
+    @select="handleSelect"
+  >
     <!-- <el-menu-item index="/">
       <el-icon><Calendar /></el-icon>
       <span>My Calendar</span>
     </el-menu-item> -->
 
-    <el-menu-item index="/create-room">
+    <el-menu-item index="/">
       <el-icon><House /></el-icon>
       <span>Create Room</span>
     </el-menu-item>
 
-    <el-menu-item index="/">
+    <el-menu-item index="/booking-meeting">
       <el-icon><OfficeBuilding /></el-icon>
       <span>Booking Meeting</span>
     </el-menu-item>
