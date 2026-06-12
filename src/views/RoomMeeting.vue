@@ -498,7 +498,30 @@ const handleDatesSet = (arg) => {
 };
 
 // ========== CALENDAR CONFIG ==========
+const updateCalendarView = () => {
+  const api = calendarRef.value?.getApi();
+  if (!api) return;
 
+  const view = window.innerWidth <= 768
+    ? "timeGridFourDay"
+    : "timeGridWeek";
+
+  if (api.view.type !== view) {
+    api.changeView(view);
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateCalendarView);
+
+  setTimeout(() => {
+    updateCalendarView();
+  }, 100);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateCalendarView);
+});
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
   initialView: "timeGridWeek",
@@ -543,6 +566,10 @@ const calendarOptions = ref({
     dayGridMonth: { dayMaxEventRows: 3 },
     timeGridWeek: { eventMaxStack: 2 },
     timeGridDay: { dayMaxEvents: 10 },
+    timeGridFourDay: {
+      type: 'timeGrid',
+      duration: { days: 2 }
+    }
   },
   eventTimeFormat: {
     hour: "2-digit",
