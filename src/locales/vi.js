@@ -1,6 +1,45 @@
 export default {
-  lagname: "vi",
-  login: {
-    USERID: ''
+  addRoom: "Thêm phòng",
+  editRoom: "Chỉnh sửa phòng",
+  roomName: "Tên phòng",
+  titleMeetingRooms: "Danh sách phòng họp",
+  subtitleMeetingRooms:
+    "Quản lý và xem tất cả các phòng họp có sẵn trong hệ thống.",
+  tab1: "Tầng 1",
+  tab2: "Tầng 2",
+  tab3: "Tầng 3",
+  map: "Bản đồ",
+  titleUpdateBooking: "Cập nhật lịch đặt",
+  titleAddBooking: "Đặt phòng họp",
+  empty: "Không có dữ liệu",
+  placeholderTitle: "Nhập tiêu đề",
+  placeholderStartTime: "Chọn thời gian bắt đầu",
+  placeholderEndTime: "Chọn thời gian kết thúc",
+  placeholderAttendees: "Nhập người tham dự (phân cách bằng dấu phẩy)",
+  placeholderDescription: "Nhập mô tả",
+  placeholderStatus: "Chọn trạng thái",
+  itCreateLink: "IT tạo liên kết cuộc họp",
+  noTitle: "Không có tiêu đề",
+  unKnown: "Không xác định",
+  notSpecial: "Không chỉ định",
+  subtitleLogin: "Chào mừng trở lại! Vui lòng đăng nhập.",
+  placeholderLogin: "Nhập email Outlook",
+  placeholderPassword: "Nhập mật khẩu",
+  noticeLogin: "Bạn chưa có tài khoản? ",
+
+  subtitleRegister: "Tạo tài khoản để bắt đầu.",
+  placeholderRegisterEmail: "Nhập email Outlook",
+  placeholderID: "Nhập mã nhân viên",
+  placeholderRegisterPassword: "Nhập mật khẩu",
+  placeholderRegisterConfirmPassword: "Xác nhận mật khẩu",
+  noticeRegister: "Đã có tài khoản? ",
+
+  common: {
+    btnUpdate: "Cập nhật",
+    btnCancel: "Hủy cuộc họp",
+    btnEdit: "Chỉnh sửa",
+    btnLogin: "Đăng nhập",
+    btnSignUp: "Đăng ký",
+    btnLogout: "Đăng xuất",
   },
 };

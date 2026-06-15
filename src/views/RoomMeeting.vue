@@ -812,7 +812,7 @@ const getDetailEquipments = (booking) => {
 
     <el-dialog
       v-model="showBookingDialog"
-      :title="isEditMode ? 'Update Booking' : 'Book a Meeting Room'"
+      :title="isEditMode ? $t('titleUpdateBooking') : $t('titleAddBooking')"
       :close-on-click-modal="false"
       destroy-on-close
       width="500"
@@ -822,7 +822,7 @@ const getDetailEquipments = (booking) => {
         <el-form-item label="Title" required>
           <el-input
             v-model="bookingForm.title"
-            placeholder="Enter meeting title"
+            :placeholder="$t('placeholderTitle')"
           />
         </el-form-item>
 
@@ -831,7 +831,7 @@ const getDetailEquipments = (booking) => {
             <el-date-picker
               v-model="bookingForm.date"
               type="date"
-              placeholder="Select date"
+              :placeholder="$t('placeholderDate')"
               style="width: 100%"
               format="DD/MM/YYYY"
               value-format="YYYY-MM-DD"
@@ -845,7 +845,7 @@ const getDetailEquipments = (booking) => {
             <el-time-picker
               v-model="bookingForm.startTime"
               format="HH:mm"
-              placeholder="Select start time"
+              :placeholder="$t('placeholderStartTime')"
               style="width: 100%"
               value-format="HH:mm"
             />
@@ -855,7 +855,7 @@ const getDetailEquipments = (booking) => {
             <el-time-picker
               v-model="bookingForm.endTime"
               format="HH:mm"
-              placeholder="Select end time"
+              :placeholder="$t('placeholderEndTime')"
               style="width: 100%"
               value-format="HH:mm"
             />
@@ -873,7 +873,7 @@ const getDetailEquipments = (booking) => {
             border
             class="w-full flex"
           >
-            <span class="font-bold text-[#303133]">IT Create Meeting Link</span>
+            <span class="font-bold text-[#303133]">{{ $t('itCreateLink') }}</span>
           </el-checkbox>
         </el-form-item>
 
@@ -968,7 +968,7 @@ const getDetailEquipments = (booking) => {
             v-model="bookingForm.description"
             type="textarea"
             :rows="3"
-            placeholder="Enter description (optional)"
+            :placeholder="$t('placeholderDescription')"
           />
         </el-form-item>
 
@@ -977,7 +977,7 @@ const getDetailEquipments = (booking) => {
             v-model="bookingForm.status"
             :options="statusOptions"
             filterable
-            placeholder="Please select Status"
+            :placeholder="$t('placeholderStatus')"
           >
             <template #default="{ item }">
               {{ item.label }}
@@ -988,9 +988,9 @@ const getDetailEquipments = (booking) => {
 
       <template #footer>
         <div class="p-3 pt-0">
-          <el-button @click="showBookingDialog = false">Cancel</el-button>
+          <el-button @click="showBookingDialog = false">{{ $t('common.btnCancel') }}</el-button>
           <el-button type="primary" @click="submitBooking" :loading="loading">
-            {{ isEditMode ? "Update" : "Confirm" }}
+            {{ isEditMode ? $t('common.btnUpdate') : $t('common.btnCreate') }}
           </el-button>
         </div>
       </template>
@@ -1008,7 +1008,7 @@ const getDetailEquipments = (booking) => {
         <div class="booking-header">
           <div>
             <h3 class="booking-title">
-              {{ selectedBooking.event.title || "Không có tiêu đề" }}
+              {{ selectedBooking.event.title || $t('noTitle') }}
             </h3>
             <div class="booking-time">
               {{
@@ -1036,7 +1036,7 @@ const getDetailEquipments = (booking) => {
               {{
                 selectedBooking?.status ||
                 selectedBooking.event.extendedProps.status ||
-                "UNKNOWN"
+                $t('unKnown')
               }}
             </el-tag>
           </el-descriptions-item>
@@ -1045,7 +1045,7 @@ const getDetailEquipments = (booking) => {
             {{
               selectedBooking.room?.room_name ||
               selectedBooking.room?.name ||
-              "Not specified"
+              $t('notSpecial')
             }}
             <span v-if="selectedBooking.room?.floor" class="room-floor">
               (Floor {{ selectedBooking.room.floor }})
@@ -1130,7 +1130,7 @@ const getDetailEquipments = (booking) => {
             <div class="user-info">
               <span>{{
                 selectedBooking.event.extendedProps.booker?.trim() ||
-                "Not specified"
+                $t('notSpecial') 
               }}</span>
               <el-tag
                 v-if="selectedBooking.isOwner"
@@ -1167,13 +1167,13 @@ const getDetailEquipments = (booking) => {
             v-if="currentUser.role === 'ADMIN'"
             type="primary"
             @click="handleEditClick"
-            >Edit</el-button
+            >{{ $t('common.btnEdit') }}</el-button
           >
           <el-button
             v-if="selectedBooking?.isOwner || currentUser.role === 'ADMIN'"
             type="danger"
             @click="handleCancelClick"
-            >Cancel Meeting</el-button
+            >{{ $t('common.btnCancel') }}</el-button
           >
         </div>
       </template>

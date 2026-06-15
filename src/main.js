@@ -10,18 +10,20 @@ import { createI18n } from "vue-i18n";
 import App from "./App.vue";
 import vi from "./locales/vi.js";
 import zh from "./locales/zh.js";
+import en from "./locales/en.js";
 import router from "@/router/index";
 import "./styles/tailwind.css";
 
 const i18n = createI18n({
   legacy: false, // 使用 Composition API
-  locale: "zh",
+  locale: "en",
   fallbackLocale: "zh", // 设置回退语言
   missingWarn: true, // 缺少翻译的警告
   fallbackWarn: true, // 使用回退语言的警告
   messages: {
     zh,
     vi,
+    en,
   },
 });
 

@@ -2,9 +2,9 @@
   <el-scrollbar class="room-container">
     <div class="header ml-8">
       <div class="p-0 m-0">
-        <h2 class="title text-[25px] font-bold">Meeting Rooms List</h2>
+        <h2 class="title text-[25px] font-bold">{{ $t('titleMeetingRooms') }}</h2>
         <span class="text-sm text-gray-400"
-          >Manage and view all available meeting spaces across facilities.</span
+          >{{ $t('subtitleMeetingRooms') }}</span
         >
       </div>
       <el-button
@@ -14,7 +14,7 @@
         @click="openAddDialog"
       >
         <el-icon class="mr-1"><CirclePlusFilled /></el-icon>
-        Add Room
+        {{ $t('addRoom') }}
       </el-button>
     </div>
 
@@ -23,7 +23,7 @@
         <el-icon class="no-data-icon">
           <CircleClose />
         </el-icon>
-        <span>No Data</span>
+        <span>{{ $t('empty') }}</span>
       </div>
     </el-card>
 
@@ -32,7 +32,7 @@
         <el-tab-pane
           v-for="floor in floorTabs"
           :key="floor"
-          :label="`${floor} Floor`"
+          :label="` ${$t('tab' + floor)}`"
           :name="floor"
         >
           <div
@@ -50,13 +50,13 @@
         </el-tab-pane>
       </el-tabs>
       <el-button class="absolute top-1 right-0" @click="showPreview = true"
-        >Map {{ activeFloor }}</el-button
+        >{{ $t('map') }} {{ activeFloor }}</el-button
       >
     </div>
 
     <el-dialog
       v-model="dialogVisible"
-      :title="isEdit ? 'Edit Room' : 'Add Room'"
+      :title="isEdit ? $t('editRoom') : $t('addRoom')"
       width="500"
       align-center
     >

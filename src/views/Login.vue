@@ -10,12 +10,12 @@
     >
       <img src="/logo.png" alt="logo" class="logo" />
       <h1 class="title">YIH SHUO - TY THAC</h1>
-      <p class="subtitle">Welcome back! Please enter your credentials.</p>
+      <p class="subtitle">{{ $t('subtitleLogin') }}</p>
       <!-- User ID Field -->
       <el-form-item prop="EMAIL">
         <el-input
           v-model="Account.EMAIL"
-          placeholder="Please enter your Outlook Email"
+          :placeholder="$t('placeholderLogin')"
           size="large"
           class="input"
           :disabled="loading"
@@ -28,7 +28,7 @@
             ref="passwordInput"
             type="text"
             v-model="Account.PWD"
-            placeholder="Please enter your Password"
+            :placeholder="$t('placeholderPassword')"
             @keyup.enter="handleLogin"
             :class="{ 'masked-password': !isPasswordVisible }"
             class="password-input"
@@ -53,9 +53,12 @@
         :disabled="loading"
         native-type="submit"
       >
-        Sign In
+        {{ $t('common.btnLogin') }}
       </el-button>
-      <span class="mt-1.5 text-[14px] text-gray-500">Do you have an account? <a href="/register" class="text-blue-500 hover:underline">Sign up</a></span>
+      <span class="mt-1.5 text-[14px] text-gray-500">
+        {{ $t('noticeLogin') }}
+        <a href="/register" class="text-blue-500 hover:underline">{{ $t('common.btnSignUp') }}</a>
+      </span>
       <p class="footer">© 2025 Meeting Room - TyThac . All rights reserved.</p>
     </el-form>
   </div>

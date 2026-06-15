@@ -108,7 +108,7 @@ onUnmounted(() => {
             <el-dropdown-menu>
               <el-dropdown-item command="logout">
                 <LogoutIcon height="20px"/>
-                Logout
+                {{ $t('common.btnLogout') }}
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>

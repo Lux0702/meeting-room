@@ -11,12 +11,12 @@
     >
       <img src="/logo.png" alt="logo" class="logo" />
       <h1 class="title">YIH SHUO - TY THAC</h1>
-      <p class="subtitle">Create an account to get started.</p>
+      <p class="subtitle">{{ $t('subtitleRegister') }}</p>
 
       <el-form-item prop="name">
         <el-input
           v-model="Account.name"
-          placeholder="Please enter your Full Name"
+          :placeholder="$t('placeholderRegisterName')"
           size="large"
           class="input"
           :disabled="loading"
@@ -26,7 +26,7 @@
       <el-form-item prop="employee_id">
         <el-input
           v-model="Account.employee_id"
-          placeholder="Please enter your Employee ID"
+          :placeholder="$t('placeholderID')"
           size="large"
           class="input"
           :disabled="loading"
@@ -36,7 +36,7 @@
       <el-form-item prop="email">
         <el-input
           v-model="Account.email"
-          placeholder="Please enter your Outlook Email"
+          :placeholder="$t('placeholderRegisterEmail')"
           size="large"
           class="input"
           :disabled="loading"
@@ -48,7 +48,7 @@
           <input
             type="text"
             v-model="Account.password"
-            placeholder="Please enter your Password"
+            :placeholder="$t('placeholderRegisterPassword')"
             :class="{ 'masked-password': !isPasswordVisible }"
             class="password-input"
             autocomplete="new-password"
@@ -66,7 +66,7 @@
           <input
             type="text"
             v-model="Account.confirmPassword"
-            placeholder="Please confirm your Password"
+            :placeholder="$t('placeholderRegisterConfirmPassword')"
             :class="{ 'masked-password': !isConfirmPasswordVisible }"
             class="password-input"
             autocomplete="new-password"
@@ -87,12 +87,12 @@
         :disabled="loading"
         native-type="submit"
       >
-        Sign Up
+        {{ $t('common.btnSignUp') }}
       </el-button>
 
       <span class="mt-2 text-[14px] text-gray-500">
-        Already have an account? 
-        <a href="/login" class="text-blue-500 hover:underline">Sign in</a>
+        {{ $t('noticeRegister') }}
+        <a href="/login" class="text-blue-500 hover:underline">{{ $t('common.btnLogin') }}</a>
       </span>
       <p class="footer">© 2025 Meeting Room - TyThac. All rights reserved.</p>
     </el-form>
