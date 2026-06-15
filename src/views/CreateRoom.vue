@@ -44,6 +44,7 @@
               :room="room"
               @load-room="LoadRoom"
               @click="goToRoomSchedule(room?.id)"
+              @update-room="openEditDialog"
               class="cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-95"
             />
           </div>
@@ -169,6 +170,7 @@ const floorLocations = Object.entries(floors).flatMap(([floor, rooms]) =>
   })),
 );
 
+const equipmentKeys = ["PC", "Projector", "TV", "Zoom"];
 const currentRole = ref(sessionStorage.getItem("Role") || "USER");
 const dialogVisible = ref(false);
 const isEdit = ref(false);
@@ -203,6 +205,7 @@ const openAddDialog = () => {
 };
 
 const openEditDialog = async (room) => {
+  console.log("🚀 ~ openEditDialog ~ room:", room)
   GSBH.value = room.gsbh;
   isEdit.value = true;
   if (GSBH.value) {
@@ -231,6 +234,9 @@ const addRoom = async () => {
 };
 
 const updateRoom = async () => {
+  equipmentKeys.forEach(key => {
+    form.value[key] = form.value.equipments.includes(key);
+  });
   const res = await put(`room-meeting/${form.value.id}`, form.value);
   if (typeof res === "string") {
     Success("Update Successfully !!");

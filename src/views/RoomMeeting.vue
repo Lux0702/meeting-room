@@ -12,7 +12,7 @@ import VideoProjectorIcon from "@iconify-vue/flat-color-icons/video-projector";
 import ModernTvCurvyEdgeIcon from "@iconify-vue/streamline-ultimate-color/modern-tv-curvy-edge";
 import MicrosoftTeamsIcon from "@iconify-vue/logos/microsoft-teams";
 import { useRouter } from "vue-router";
-
+import { useI18n } from "vue-i18n";
 const router = useRouter();
 const equipmentConfig = {
   PC: {
@@ -218,6 +218,53 @@ const showMeetingDetails = computed(() => {
 });
 
 // ========== BOOKING OPERATIONS ==========
+const defaultMeetings = [
+  {
+    id: "fixed-hoka",
+    title: "HOKA Progress Meeting",
+    daysOfWeek: [2], // Tuesday
+    startTime: "08:00:00",
+    endTime: "09:00:00",
+    backgroundColor: "#67C23A",
+    borderColor: "#67C23A",
+    extendedProps: {
+      fixed: true,
+      roomId: "302",
+      roomName: "Meeting Room 302",
+      status: "confirmed",
+    },
+  },
+  {
+    id: "fixed-tech-transfer",
+    title: "Technology Transfer Progress Meeting",
+    daysOfWeek: [3], // Wednesday
+    startTime: "08:00:00",
+    endTime: "09:00:00",
+    backgroundColor: "#67C23A",
+    borderColor: "#67C23A",
+    extendedProps: {
+      fixed: true,
+      roomId: "302",
+      roomName: "Meeting Room 302",
+      status: "confirmed",
+    },
+  },
+  {
+    id: "fixed-teva",
+    title: "TEVA Progress Meeting",
+    daysOfWeek: [5], // Friday
+    startTime: "08:00:00",
+    endTime: "09:00:00",
+    backgroundColor: "#67C23A",
+    borderColor: "#67C23A",
+    extendedProps: {
+      fixed: true,
+      roomId: "201",
+      roomName: "Meeting Room 201",
+      status: "confirmed",
+    },
+  },
+];
 const statusColorMap = {
   confirmed: "#67C23A",
   pending: "#909399",
@@ -273,7 +320,7 @@ const fetchRoomBookings = async (targetDate = null) => {
       })
       .filter((event) => event !== null);
 
-    calendarOptions.value.events = events;
+    calendarOptions.value.events = [...defaultMeetings, ...events];
     roomBookings.value = allBookings;
   } catch (err) {
     console.error("Error fetching bookings:", err);
@@ -465,7 +512,7 @@ const editBooking = (booking) => {
 
   showBookingDialog.value = true;
 };
-
+const { t } = useI18n();
 const confirmCancel = (bookingId) => {
   const booking = roomBookings.value.find((b) => b.id === bookingId);
 
@@ -475,11 +522,11 @@ const confirmCancel = (bookingId) => {
   }
 
   ElMessageBox.confirm(
-    "Are you sure you want to cancel this booking?",
-    "Confirm Cancel",
+    t('common.subTitleConfirmCancel'),
+    t('common.titleConfirmCancel'),
     {
-      confirmButtonText: "Cancel",
-      cancelButtonText: "Exit",
+      confirmButtonText: t('common.btnCancel'),
+      cancelButtonText: t('common.btnExit'),
       type: "warning",
     },
   )
@@ -566,7 +613,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateCalendarView);
 });
 const calendarOptions = ref({
- 
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
   initialView: "timeGridWeek",
   locale: "en",
@@ -575,6 +621,8 @@ const calendarOptions = ref({
   slotMinTime: "07:00:00",
   slotMaxTime: "20:30:00",
   slotEventOverlap: false,
+  height: "auto", // Ép FullCalendar lấy 100% chiều cao của .calendar-container
+  expandRows: true, // Ép các dòng (rows) tự động giãn đều hoặc co lại
   headerToolbar: {
     left: "myPrev,myNext",
     center: "title",
@@ -637,8 +685,7 @@ const calendarOptions = ref({
       `,
     };
   },
-  // aspectRatio: 1.5,
-  // height: 1000,
+  aspectRatio: 1.5,
 });
 
 // ========== WATCHERS & LIFECYCLE ==========
@@ -819,7 +866,7 @@ const getDetailEquipments = (booking) => {
       align-center
     >
       <el-form :model="bookingForm" label-position="top" class="p-3">
-        <el-form-item label="Title" required>
+        <el-form-item :label="$t('labelTitle')" required>
           <el-input
             v-model="bookingForm.title"
             :placeholder="$t('placeholderTitle')"
@@ -827,7 +874,7 @@ const getDetailEquipments = (booking) => {
         </el-form-item>
 
         <div class="flex gap-4">
-          <el-form-item label="Date" class="flex-1">
+          <el-form-item :label="$t('labelDate')" class="flex-1">
             <el-date-picker
               v-model="bookingForm.date"
               type="date"
@@ -841,7 +888,7 @@ const getDetailEquipments = (booking) => {
         </div>
 
         <div class="flex gap-4">
-          <el-form-item label="Start time" class="flex-1">
+          <el-form-item :label="$t('labelStartTime')" class="flex-1">
             <el-time-picker
               v-model="bookingForm.startTime"
               format="HH:mm"
@@ -851,7 +898,7 @@ const getDetailEquipments = (booking) => {
             />
           </el-form-item>
 
-          <el-form-item label="End time" class="flex-1">
+          <el-form-item :label="$t('labelEndTime')" class="flex-1">
             <el-time-picker
               v-model="bookingForm.endTime"
               format="HH:mm"
@@ -873,12 +920,14 @@ const getDetailEquipments = (booking) => {
             border
             class="w-full flex"
           >
-            <span class="font-bold text-[#303133]">{{ $t('itCreateLink') }}</span>
+            <span class="font-bold text-[#303133]">{{
+              $t("itCreateLink")
+            }}</span>
           </el-checkbox>
         </el-form-item>
 
         <el-form-item
-          label="Room Equipment"
+          :label="$t('labelEquipments')"
           v-if="availableEquipments.length > 0"
         >
           <div class="flex flex-wrap gap-2">
@@ -928,7 +977,7 @@ const getDetailEquipments = (booking) => {
           </div>
         </template>
 
-        <el-form-item label="Participants">
+        <el-form-item :label="$t('labelParticipants')">
           <el-select
             ref="selectRef"
             v-model="bookingForm.members"
@@ -959,11 +1008,11 @@ const getDetailEquipments = (booking) => {
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Booked by">
+        <el-form-item :label="$t('labelBooker')">
           <el-input v-model="bookingForm.booker" disabled />
         </el-form-item>
 
-        <el-form-item label="Description" class="mb-0">
+        <el-form-item :label="$t('labelDescription')" class="mb-0">
           <el-input
             v-model="bookingForm.description"
             type="textarea"
@@ -972,7 +1021,7 @@ const getDetailEquipments = (booking) => {
           />
         </el-form-item>
 
-        <el-form-item label="Status" v-if="isEditMode">
+        <el-form-item :label="$t('labelStatus')" v-if="isEditMode">
           <el-select-v2
             v-model="bookingForm.status"
             :options="statusOptions"
@@ -988,9 +1037,11 @@ const getDetailEquipments = (booking) => {
 
       <template #footer>
         <div class="p-3 pt-0">
-          <el-button @click="showBookingDialog = false">{{ $t('common.btnCancel') }}</el-button>
+          <el-button @click="showBookingDialog = false">{{
+            $t("common.btnCancel")
+          }}</el-button>
           <el-button type="primary" @click="submitBooking" :loading="loading">
-            {{ isEditMode ? $t('common.btnUpdate') : $t('common.btnCreate') }}
+            {{ isEditMode ? $t("common.btnUpdate") : $t("common.btnCreate") }}
           </el-button>
         </div>
       </template>
@@ -998,7 +1049,7 @@ const getDetailEquipments = (booking) => {
 
     <el-dialog
       v-model="showDetailDialog"
-      title="Booking details"
+      :title="$t('bookingDetails')"
       width="500"
       :show-close="true"
       class="booking-detail-dialog"
@@ -1008,7 +1059,7 @@ const getDetailEquipments = (booking) => {
         <div class="booking-header">
           <div>
             <h3 class="booking-title">
-              {{ selectedBooking.event.title || $t('noTitle') }}
+              {{ selectedBooking.event.title || $t("noTitle") }}
             </h3>
             <div class="booking-time">
               {{
@@ -1022,7 +1073,7 @@ const getDetailEquipments = (booking) => {
         </div>
 
         <el-descriptions :column="1" border class="booking-info">
-          <el-descriptions-item label="Status">
+          <el-descriptions-item :label="$t('labelStatus')">
             <el-tag
               :type="
                 getStatusTagType(
@@ -1036,27 +1087,27 @@ const getDetailEquipments = (booking) => {
               {{
                 selectedBooking?.status ||
                 selectedBooking.event.extendedProps.status ||
-                $t('unKnown')
+                $t("unKnown")
               }}
             </el-tag>
           </el-descriptions-item>
 
-          <el-descriptions-item label="Room">
+          <el-descriptions-item :label="$t('labelRoom')">
             {{
               selectedBooking.room?.room_name ||
               selectedBooking.room?.name ||
-              $t('notSpecial')
+              $t("notSpecial")
             }}
             <span v-if="selectedBooking.room?.floor" class="room-floor">
               (Floor {{ selectedBooking.room.floor }})
             </span>
           </el-descriptions-item>
 
-          <el-descriptions-item label="Date">
+          <el-descriptions-item :label="$t('labelDate')">
             {{ formatFullDate(selectedBooking.event.start) }}
           </el-descriptions-item>
 
-          <el-descriptions-item label="Time">
+          <el-descriptions-item :label="$t('labelTime')">
             {{ formatTime(selectedBooking.event.start) }} -
             {{ formatTime(selectedBooking.event.end) }}
             ({{
@@ -1068,7 +1119,7 @@ const getDetailEquipments = (booking) => {
           </el-descriptions-item>
 
           <el-descriptions-item
-            label="Equipments"
+            :label="$t('labelEquipments')"
             v-if="getDetailEquipments(selectedBooking).length > 0"
           >
             <div class="flex flex-wrap gap-2">
@@ -1126,11 +1177,11 @@ const getDetailEquipments = (booking) => {
             </el-descriptions-item>
           </template>
 
-          <el-descriptions-item label="Booked by">
+          <el-descriptions-item :label="$t('labelBooker')">
             <div class="user-info">
               <span>{{
                 selectedBooking.event.extendedProps.booker?.trim() ||
-                $t('notSpecial') 
+                $t("notSpecial")
               }}</span>
               <el-tag
                 v-if="selectedBooking.isOwner"
@@ -1145,14 +1196,14 @@ const getDetailEquipments = (booking) => {
 
           <el-descriptions-item
             v-if="selectedBooking.event.extendedProps.members"
-            label="Members"
+            :label="$t('labelParticipants')"
           >
             {{ selectedBooking.event.extendedProps.members }}
           </el-descriptions-item>
 
           <el-descriptions-item
             v-if="selectedBooking.event.extendedProps.description"
-            label="Description"
+            :label="$t('labelDescription')"
           >
             <div class="description-text">
               {{ selectedBooking.event.extendedProps.description }}
@@ -1167,13 +1218,13 @@ const getDetailEquipments = (booking) => {
             v-if="currentUser.role === 'ADMIN'"
             type="primary"
             @click="handleEditClick"
-            >{{ $t('common.btnEdit') }}</el-button
+            >{{ $t("common.btnEdit") }}</el-button
           >
           <el-button
             v-if="selectedBooking?.isOwner || currentUser.role === 'ADMIN'"
             type="danger"
             @click="handleCancelClick"
-            >{{ $t('common.btnCancel') }}</el-button
+            >{{ $t("common.btnCancel") }}</el-button
           >
         </div>
       </template>
@@ -1186,7 +1237,7 @@ const getDetailEquipments = (booking) => {
   overflow: visible !important;
 }
 :deep(.fc-timegrid-body) {
-  min-height: 600px;  
+  min-height: 700px;
 }
 :deep(.fc-timegrid-event-harness) {
   padding-right: 4px !important;
@@ -1202,7 +1253,6 @@ const getDetailEquipments = (booking) => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  overflow: auto;
 }
 .header-section {
   display: flex;
@@ -1241,14 +1291,21 @@ const getDetailEquipments = (booking) => {
   flex: 1;
 }
 .calendar-container {
-  flex: 1;
-  min-height: 600px;
+  padding: 10px;
+  /* min-height: 100%;  */
   background: white;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  box-sizing: border-box; /* Cực kỳ quan trọng để padding không cộng dồn vào height */
 }
+
+/* Đảm bảo FullCalendar nằm gọn và tự sinh thanh cuộn bên trong nó thay vì container ngoài */
 :deep(.fc) {
   height: 100%;
+}
+
+/* Bật thanh cuộn dọc cho nội dung của Calendar */
+:deep(.fc-scroller-liquid-absolute) {
+  overflow-y: auto !important;
 }
 :deep(.fc-event) {
   cursor: pointer;

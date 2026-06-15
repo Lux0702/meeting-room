@@ -32,6 +32,20 @@ export default {
   placeholderRegisterPassword: "请输入密码",
   placeholderRegisterConfirmPassword: "请确认密码",
   noticeRegister: "已有账号？",
+  noticeLogin: "已经有账号？",
+  labelDescription: "描述",
+  labelParticipants: "参会人员",
+  labelBooker: "预订人",
+  labelStatus: "状态",
+  labelEquipments: "会议室设备",
+  labelStartTime: "开始时间",
+  labelEndTime: "结束时间",
+  labelDate: "日期",
+  labelTitle: "标题",
+  bookingDetails: "预订详情",
+  labelRoom: "会议室",
+  labelTime: "时间",
+
 
   common: {
     btnUpdate: "更新",
@@ -40,5 +54,9 @@ export default {
     btnLogin: "登录",
     btnSignUp: "注册",
     btnLogout: "退出登录",
+    btnCreate: "创建",
+    titleConfirmCancel: "确认取消",
+    subTitleConfirmCancel: "您确定要取消此预订吗？",
+    btnExit: "退出",
   },
 };
