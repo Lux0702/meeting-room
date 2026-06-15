@@ -12,7 +12,7 @@ import VideoProjectorIcon from "@iconify-vue/flat-color-icons/video-projector";
 import ModernTvCurvyEdgeIcon from "@iconify-vue/streamline-ultimate-color/modern-tv-curvy-edge";
 import MicrosoftTeamsIcon from "@iconify-vue/logos/microsoft-teams";
 import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n" ;
 const router = useRouter();
 const equipmentConfig = {
   PC: {
